@@ -1,2 +1,4 @@
 requests
 urllib3
+pytz
+fake_useragent
