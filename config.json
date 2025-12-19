@@ -3,10 +3,7 @@
   "bili_jct": "73cdab90ef7787992ba143bd94b79487",
   "ps": "20",
   "start": 1,
-  "end": 99999
-}
-
-{
+  "end": 99999,
   "oid": "10ed475db70b2fa7540891bc53d2fdc0",
   "type": 1,
   "file_path_1": "comments/主评论.csv",
