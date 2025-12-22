@@ -10,6 +10,8 @@ import datetime
 from fake_useragent import UserAgent
 import random
 import sys
+from bv2oid import bv2av
+
 with open('config.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
     ps = config['ps']
@@ -22,11 +24,18 @@ with open('config.json', 'r', encoding='utf-8') as f:
     type = config['type']
     cookies_str = config['cookies_str']
     bili_jct = config['bili_jct']
-
+if len(sys.argv) > 1:
+    oid = bv2av(sys.argv[1])
+    type = sys.argv[2]
+    file_path_3 = f"comments/{oid}_3.csv"
+    
 # 重试次数限制
 MAX_RETRIES = 2
 # 重试间隔（秒）
 RETRY_INTERVAL = 3
+MAX_PAGE_NUM = 10
+SLEEP_TIME = 60
+
 beijing_tz = pytz.timezone('Asia/Shanghai')#时间戳转换为北京时间
 ua=UserAgent()#创立随机请求头
 one_comments = []
@@ -35,17 +44,9 @@ all_2_comments = []#构造数据放在一起的容器 二级评论
 comments_current = []
 comments_current_2 = []
 # 将所有评论数据写入CSV文件
-with open(file_path_1, mode='w', newline='', encoding='utf-8-sig') as file:
-    writer = csv.writer(file)
-    writer.writerow(['昵称', '性别', '时间', '点赞', '评论', 'IP属地','二级评论条数','等级','uid','rpid'])
-    writer.writerows(all_comments)
-with open(file_path_2, mode='w', newline='', encoding='utf-8-sig') as file:
-    writer = csv.writer(file)
-    writer.writerow(['昵称', '性别', '时间', '点赞', '评论', 'IP属地','二级评论条数,条数相同说明在同一个人下面','等级','uid','rpid'])
-    writer.writerows(all_2_comments)
 with open(file_path_3, mode='w', newline='', encoding='utf-8-sig') as file:
     writer = csv.writer(file)
-    writer.writerow(['昵称', '性别', '时间', '点赞', '评论', 'IP属地', '二级评论条数', '等级', 'uid', 'rpid'])
+    writer.writerow(['账号昵称', '性别', '评论时间', '点赞', '评论评论', 'IP属地', '等级', 'uid', 'rpid'])
     writer.writerows(all_comments)
 
 with requests.Session() as session:
@@ -217,7 +218,7 @@ with requests.Session() as session:
                                                     location = location.replace('IP属地：', '') if location else location
                                                     current_level = comment['member']['level_info']['current_level']
                                                     mid = str(comment['member']['mid'])
-                                                    all_2_comments.append([name, sex, formatted_time, like, message, location, count,current_level,mid,rpid])
+                                                    all_2_comments.append([name, sex, formatted_time, like, message, location, current_level,mid,rpid])
                                                     with open(file_path_2, mode='a', newline='',encoding='utf-8-sig') as file:
                                                         writer = csv.writer(file)
                                                         writer.writerows(all_2_comments)
@@ -229,6 +230,9 @@ with requests.Session() as session:
                                             print(f"获取第{page_pn + 1}页失败。状态码: {response.status_code}")
                                     time.sleep(random.uniform(0.2, 0.3))
                             print(f"已经成功爬取第{page}页。")
+
+                            if page % MAX_PAGE_NUM == 0:
+                                time.sleep(SLEEP_TIME)
                         else:
                             print(f"在页面 {page} 的JSON响应中缺少 'replies' 键。跳过此页。")
                             sys.exit()
@@ -246,4 +250,5 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
