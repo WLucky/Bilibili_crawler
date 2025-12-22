@@ -229,10 +229,11 @@ with requests.Session() as session:
                                                     all_2_comments.clear()
                                         else:
                                             print(f"获取第{page_pn + 1}页失败。状态码: {response.status_code}")
-                                    time.sleep(random.uniform(0.2, 0.3))
+                                    time.sleep(random.uniform(0.3, 0.4))
                             print(f"已经成功爬取第{page}页。")
 
                             if page % MAX_PAGE_NUM == 0:
+                                 print(f"已经爬取{page}页，休眠{SLEEP_TIME}秒")
                                 time.sleep(SLEEP_TIME)
                         else:
                             print(f"在页面 {page} 的JSON响应中缺少 'replies' 键。跳过此页。")
@@ -242,7 +243,7 @@ with requests.Session() as session:
                 else:
                     print(f"获取页面 {page} 失败。状态码: {response.status_code}")
 
-                time.sleep(random.uniform(0.2, 0.3))
+                time.sleep(random.uniform(0.3, 0.4))
                 break
             except requests.exceptions.RequestException as e:
                 print(f"连接失败: {e}")
@@ -251,6 +252,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
