@@ -45,7 +45,7 @@ jobs:
         IFS=',' read -ra BV_ARRAY <<< "${{ github.event.inputs.bv_ids }}"        
         for i in "${!BV_ARRAY[@]}"; do
           bv_id="${BV_ARRAY[$i]// /}"  # 去除空格
-          echo "处理第 $((i+1)) 个视频: $bv_id"
+          echo "处理第 $((i+1)) 个视频: $bv_id 类型: $github.event.inputs.bv_type" 
           
           python simple_bili_crawler.py "$bv_id" "${{ github.event.inputs.bv_type }}"
           
