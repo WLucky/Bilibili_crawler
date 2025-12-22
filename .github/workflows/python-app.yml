@@ -42,15 +42,19 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Python
       run: |
-        {% for bv_id in github.event.inputs.bv_ids.split(',') %}
-        echo "=== 处理第 {{ loop.index }} 个视频 ==="
-        echo "BV号: {{ bv_id.trim() }}"
-        python simple_bili_crawler.py "{{ bv_id.trim() }}" "{{ github.event.inputs.bv_type.trim() }}"
-        {% if not loop.last %}
-        echo "等待2分钟...
-        sleep 120
-        {% endif %}
-        {% endfor %}
+        IFS=',' read -ra BV_ARRAY <<< "${{ github.event.inputs.bv_ids }}"        
+        for i in "${!BV_ARRAY[@]}"; do
+          bv_id="${BV_ARRAY[$i]// /}"  # 去除空格
+          echo "处理第 $((i+1)) 个视频: $bv_id"
+          
+          python simple_bili_crawler.py "$bv_id" "${{ github.event.inputs.bv_type }}"
+          
+          # 如果不是最后一个，休眠2分钟
+          if [ $i -lt $((${#BV_ARRAY[@]} - 1)) ]; then
+            echo "等待2分钟..."
+            sleep 120
+          fi
+        done
     - name: List generated files (debug step)
       run: |
         echo "Preparing docker images list (.tar.gz) files:"
