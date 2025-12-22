@@ -9,7 +9,7 @@ on:
       bv_ids:
         description: '请填写BV号，多个用英文逗号分开'
         required: true
-        default: 'BV1nhySBHHEvz,BV1Ny8BqEx3'
+        default: 'BV1nhySBHHEvz,BV1sNy8BqEx3'
       bv_type:
         description: '请选择评论类型'
         required: true
