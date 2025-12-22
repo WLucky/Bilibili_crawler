@@ -6,10 +6,14 @@ name: Python application
 on:
   workflow_dispatch:
     inputs:
-      video_bv_ids:
-        description: '请填写视频BV号'
+      bv_ids:
+        description: '请填写BV号，多个用英文逗号分开'
         required: true
-        default: 'BV1nhySBHHEvz'
+        default: 'BV1nhySBHHEvz,BV1Ny8BqEx3'
+      bv_type:
+        description: '请填写类型，1表示视频评论，11表示图文动态评论，17表示转发、文字动态评论'
+        required: true
+        default: '1'
 
 permissions:
   contents: write
@@ -38,7 +42,15 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Python
       run: |
-        python simple_bili_crawler.py
+        {% for bv_id in github.event.inputs.bv_ids.split(',') %}
+        echo "=== 处理第 {{ loop.index }} 个视频 ==="
+        echo "BV号: {{ bv_id.trim() }}"
+        python simple_bili_crawler.py "{{ bv_id.trim() }}" "{{ github.event.inputs.bv_type.trim() }}"
+        {% if not loop.last %}
+        echo "等待2分钟...
+        sleep 120
+        {% endif %}
+        {% endfor %}
     - name: List generated files (debug step)
       run: |
         echo "Preparing docker images list (.tar.gz) files:"
@@ -55,7 +67,7 @@ jobs:
           ### Video List
           | No. | Bilibili Video |
           |-----|----------------|
-          {% for bv_id in bv_ids.split(',') %}
+          {% for bv_id in github.event.inputs.bv_ids.split(',') %}
           | {{ loop.index }} | [BV号: {{ bv_id }}](https://www.bilibili.com/video/{{ bv_id }}) |
           {% endfor %}
         draft: false
