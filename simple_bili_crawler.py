@@ -233,7 +233,7 @@ with requests.Session() as session:
                             print(f"已经成功爬取第{page}页。")
 
                             if page % MAX_PAGE_NUM == 0:
-                                 print(f"已经爬取{page}页，休眠{SLEEP_TIME}秒")
+                                print(f"已经爬取{page}页，休眠{SLEEP_TIME}秒")
                                 time.sleep(SLEEP_TIME)
                         else:
                             print(f"在页面 {page} 的JSON响应中缺少 'replies' 键。跳过此页。")
@@ -252,6 +252,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
