@@ -6,7 +6,7 @@ name: Python application
 on:
   workflow_dispatch:
     inputs:
-      docker_images:
+      video_bv_ids:
         description: '请填写视频BV号'
         required: true
         default: 'BV1nhySBHHEvz'
@@ -38,6 +38,35 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run Python
       run: |
-        # python simple_bili_crawler.py
-         echo "当前目录内容:"
-         ls -la
+        python simple_bili_crawler.py
+    - name: List generated files (debug step)
+      run: |
+        echo "Preparing docker images list (.tar.gz) files:"
+        ls -la comments/
+        release_name="$(TZ="Asia/Shanghai" date +'%Y-%m-%d %H:%M Build')"
+        echo "RELEASE_NAME=$release_name" >> $GITHUB_ENV
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@master
+      with:
+        tag_name: Comments
+        name: ${{ env.RELEASE_NAME }}
+        body: |
+          ### Video List
+          | No. | Bilibili Video |
+          |-----|----------------|
+          {% for bv_id in bv_ids.split(',') %}
+          | {{ loop.index }} | [BV号: {{ bv_id }}](https://www.bilibili.com/video/{{ bv_id }}) |
+          {% endfor %}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload comments files as release assets
+      uses: softprops/action-gh-release@v2.1.0
+      with:
+        tag_name: Comments
+        files: ${{ github.workspace }}/comments/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
