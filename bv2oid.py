@@ -25,4 +25,5 @@ def bv2av(bvid) :
         tmp = tmp * BASE + idx
     return (tmp & MASK_CODE) ^ XOR_CODE
 
-print(bv2av("BV1yTLAzuEZB"))
+
+# print(bv2av("BV1yTLAzuEZB"))
