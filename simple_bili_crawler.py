@@ -93,9 +93,6 @@ with requests.Session() as session:
                         rpid = str(reply['rpid'])
                         count = reply['rcount']
                         all_comments.append([name, sex, formatted_time, like, message, location,current_level,mid,rpid])
-                        with open(file_path_1, mode='a', newline='', encoding='utf-8-sig') as file:
-                            writer = csv.writer(file)
-                            writer.writerows(all_comments)
                         with open(file_path_3, mode='a', newline='', encoding='utf-8-sig') as file:
                             writer = csv.writer(file)
                             writer.writerows(all_comments)
@@ -134,9 +131,6 @@ with requests.Session() as session:
                                             current_level = comment['member']['level_info']['current_level']
                                             mid = str(comment['member']['mid'])
                                             all_2_comments.append([name, sex, formatted_time, like, message, location ,current_level,mid,rpid])
-                                            with open(file_path_2, mode='a', newline='', encoding='utf-8-sig') as file:
-                                                writer = csv.writer(file)
-                                                writer.writerows(all_2_comments)
                                             with open(file_path_3, mode='a', newline='', encoding='utf-8-sig') as file:
                                                 writer = csv.writer(file)
                                                 writer.writerows(all_2_comments)
@@ -179,10 +173,6 @@ with requests.Session() as session:
                                 current_level = comment['member']['level_info']['current_level']
                                 mid = str(comment['member']['mid'])
                                 all_comments.append([name, sex, formatted_time, like, message, location,current_level,mid,rpid])
-
-                                with open(file_path_1, mode='a', newline='', encoding='utf-8-sig') as file:
-                                    writer = csv.writer(file)
-                                    writer.writerows(all_comments)
                                 with open(file_path_3, mode='a', newline='', encoding='utf-8-sig') as file:
                                     writer = csv.writer(file)
                                     writer.writerows(all_comments)
@@ -222,9 +212,6 @@ with requests.Session() as session:
                                                     current_level = comment['member']['level_info']['current_level']
                                                     mid = str(comment['member']['mid'])
                                                     all_2_comments.append([name, sex, formatted_time, like, message, location, current_level,mid,rpid])
-                                                    with open(file_path_2, mode='a', newline='',encoding='utf-8-sig') as file:
-                                                        writer = csv.writer(file)
-                                                        writer.writerows(all_2_comments)
                                                     with open(file_path_3, mode='a', newline='',encoding='utf-8-sig') as file:
                                                         writer = csv.writer(file)
                                                         writer.writerows(all_2_comments)
@@ -254,6 +241,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
