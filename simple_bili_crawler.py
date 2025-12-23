@@ -56,7 +56,7 @@ if type == 1:
 else:
     file_path_1 = f"comments/{oid}_1.csv"
     file_path_2 = f"comments/{oid}_2.csv"
-        file_path_3 = f"comments/{oid}_3.csv"
+    file_path_3 = f"comments/{oid}_3.csv"
             
 # 重试次数限制
 MAX_RETRIES = 2
@@ -268,6 +268,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
