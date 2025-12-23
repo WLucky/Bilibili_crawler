@@ -45,6 +45,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Clean Workspace
+      run: |
+        rm -rf ./comments/*.csv
     - name: Run Python
       run: |
         # 获取用户选择的文字类型
@@ -96,11 +99,11 @@ jobs:
         tag_name: Comments
         name: ${{ env.RELEASE_NAME }}
         body: |
-          ### Video List
-          | No. | Bilibili Video |
-          |-----|----------------|
+          ### List
+          |No.  | BV ID| 
+          |-----|-----|
           {% for bv_id in github.event.inputs.bv_ids.split(',') %}
-          | {{ loop.index }} | [BV号: {{ bv_id }}](https://www.bilibili.com/video/{{ bv_id }}) |
+          | {{ loop.index }} | {{ bv_id }} |
           {% endfor %}
         draft: false
         prerelease: false
