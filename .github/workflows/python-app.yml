@@ -47,8 +47,21 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Clean Workspace
       run: |
-        rm -rf ./comments/*.csv
-        ls ./comments
+        # 先检查当前目录结构
+        pwd
+        ls -la
+        
+        # 检查 comments 目录是否存在
+        if [ -d "./comments" ]; then
+          echo "Cleaning comments directory..."
+          rm -rf ./comments/*.csv
+          ls ./comments
+        else
+          echo "Comments directory not found, checking relative paths..."
+          # 尝试其他可能的路径
+          ls -la ./
+          find . -name "comments" -type d
+        fi
     - name: Run Python
       run: |
         # 获取用户选择的文字类型
@@ -100,12 +113,7 @@ jobs:
         tag_name: Comments
         name: ${{ env.RELEASE_NAME }}
         body: |
-          ### List
-          |No.  | BV ID| 
-          |-----|-----|
-          {% for bv_id in github.event.inputs.bv_ids.split(',') %}
-          | {{ loop.index }} | {{ bv_id }} |
-          {% endfor %}
+          ### 数据见下方附件
         draft: false
         prerelease: false
       env:
