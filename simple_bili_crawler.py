@@ -49,9 +49,9 @@ if type == 1:
         data = response.json()
         title = data["data"]["title"]
         clean_title = clean_filename(title)
-        file_path_1 = f"comments/{clean_title}_1.csv"
-        file_path_2 = f"comments/{clean_title}_2.csv"
-        file_path_3 = f"comments/{clean_title}_3.csv"
+        file_path_1 = f"comments/{sys.argv[1]}_{clean_title}_1.csv"
+        file_path_2 = f"comments/{sys.argv[1]}_{clean_title}_2.csv"
+        file_path_3 = f"comments/{sys.argv[1]}_{clean_title}_3.csv"
         print(f"标题: {clean_title}")
 else:
     file_path_1 = f"comments/{sys.argv[1]}_1.csv"
@@ -269,6 +269,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
