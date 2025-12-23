@@ -10,6 +10,7 @@ import datetime
 from fake_useragent import UserAgent
 import random
 import sys
+import re
 
 XOR_CODE = 23442827791579
 MASK_CODE = 2251799813685247
@@ -303,6 +304,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
