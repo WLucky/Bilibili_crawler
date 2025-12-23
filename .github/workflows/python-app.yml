@@ -48,6 +48,7 @@ jobs:
     - name: Clean Workspace
       run: |
         rm -rf ./comments/*.csv
+        ls ./comments
     - name: Run Python
       run: |
         # 获取用户选择的文字类型
