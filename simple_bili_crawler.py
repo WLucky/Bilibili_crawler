@@ -26,9 +26,10 @@ with open('config.json', 'r', encoding='utf-8') as f:
     cookies_str = config['cookies_str']
     bili_jct = config['bili_jct']
 if len(sys.argv) > 1:
-    oid = bv2av(sys.argv[1])
+    oid = str(bv2av(sys.argv[1]))
     type = int(sys.argv[2])
     file_path_3 = f"comments/{oid}_3.csv"
+    print(f"信息解析 oid: {oid},type: {type}")
             
 # 重试次数限制
 MAX_RETRIES = 2
@@ -253,6 +254,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
