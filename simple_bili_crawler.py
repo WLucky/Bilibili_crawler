@@ -30,6 +30,33 @@ if len(sys.argv) > 1:
     type = int(sys.argv[2])
     file_path_3 = f"comments/{oid}_3.csv"
     print(f"信息解析 oid: {oid},type: {type}")
+
+if type == 1:
+    with requests.Session() as session:
+        retries = Retry(total=3,  # 最大重试次数，好像没有这个函数
+                        backoff_factor=0.1,  # 间隔时间会乘以这个数
+                        status_forcelist=[500, 502, 503, 504])
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+            'Cookie': cookies_str,
+            'csrf': bili_jct,
+        }
+        url_inf = f'https://api.bilibili.com/x/web-interface/view?bvid={av2bv(int(oid))}'
+        data = {
+            'bvid': av2bv(int(oid)),
+        }
+        response = session.get(url_inf, params=data, headers=headers)
+        data = response.json()
+        title = data["data"]["title"]
+        clean_title = clean_filename(title)
+        file_path_1 = f"comments/{clean_title}_1.csv"
+        file_path_2 = f"comments/{clean_title}_2.csv"
+        file_path_3 = f"comments/{clean_title}_3.csv"
+
+else:
+    file_path_1 = f"comments/{oid}_1.csv"
+    file_path_2 = f"comments/{oid}_2.csv"
+        file_path_3 = f"comments/{oid}_3.csv"
             
 # 重试次数限制
 MAX_RETRIES = 2
@@ -241,6 +268,7 @@ with requests.Session() as session:
                     time.sleep(RETRY_INTERVAL)
                 else:
                     raise
+
 
 
 
