@@ -114,6 +114,11 @@ jobs:
         name: ${{ env.RELEASE_NAME }}
         body: |
           ### 数据见下方附件
+          
+        # 阻止自动生成源码压缩包
+        generate_release_notes: false
+        skip_duplicate_assets: true
+        
         draft: false
         prerelease: false
       env:
