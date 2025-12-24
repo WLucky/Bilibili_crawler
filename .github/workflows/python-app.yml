@@ -113,12 +113,7 @@ jobs:
         tag_name: Comments-${{ github.run_id }}  # 使用唯一的run_id
         name: ${{ env.RELEASE_NAME }}
         body: |
-          ### 数据见下方附件
-          
-        # 阻止自动生成源码压缩包
-        generate_release_notes: false
-        skip_duplicate_assets: true
-        
+          ### 数据见下方附件  
         draft: false
         prerelease: false
       env:
